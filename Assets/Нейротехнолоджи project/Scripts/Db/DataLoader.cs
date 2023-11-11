@@ -66,6 +66,7 @@ public class DataLoader : MonoBehaviour, IBootstrapper
         {
             userData = DB.SelectUserByNick(playerData.playerName);
             playerData.playerId = userData.UserId;
+            SaveSystem.SavePlayer(playerData.playerId);
         }
         
         playerData.playerName = userData.UserName;

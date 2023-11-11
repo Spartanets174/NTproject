@@ -20,8 +20,6 @@ public class MenuPresenter : MonoBehaviour, IBootstrapper
     [SerializeField]
     private GameObject settingsWindow;
     [SerializeField]
-    private GameObject chooseModeWindow;
-    [SerializeField]
     private GameObject recordsTable;
 
     MenuController menuController;
@@ -33,21 +31,21 @@ public class MenuPresenter : MonoBehaviour, IBootstrapper
         
 
         exitButton.onClick.AddListener(menuController.Exit);
-        playButton.onClick.AddListener(TurnOnChooseModeWindow);
+        playButton.onClick.AddListener(LoadPlayScene);
         settingsButton.onClick.AddListener(TurnOnSettingsWindow);
         recordsTableButton.onClick.AddListener(TurnOnRecordsTable);
     }
     
     private void OnDestroy()
     {        
-        playButton.onClick.RemoveListener(TurnOnChooseModeWindow);
+        playButton.onClick.RemoveListener(LoadPlayScene);
         settingsButton.onClick.RemoveListener(TurnOnSettingsWindow);
         recordsTableButton.onClick.RemoveListener(TurnOnRecordsTable);
     }
 
-    private void TurnOnChooseModeWindow()
+    private void LoadPlayScene()
     {
-        chooseModeWindow.SetActive(true);
+        menuController.LoadPlayScene();
     }
     private void TurnOnSettingsWindow()
     {

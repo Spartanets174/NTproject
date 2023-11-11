@@ -13,4 +13,8 @@ EditorBuildSettings:
     path: "Assets/\u041D\u0435\u0439\u0440\u043E\u0442\u0435\u0445\u043D\u043E\u043B\u043E\u0434\u0436\u0438
       project/Scenes/Menu.unity"
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: "Assets/\u041D\u0435\u0439\u0440\u043E\u0442\u0435\u0445\u043D\u043E\u043B\u043E\u0434\u0436\u0438
+      project/Scenes/Game.unity"
+    guid: 10e692603510c3249bcb159212a2f57e
   m_configObjects: {}

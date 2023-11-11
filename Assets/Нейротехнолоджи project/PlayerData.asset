@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e161928a7e10ec47a475138fa2423fb, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  playerId: 13
-  playerName: "\u0410\u043C\u043E\u0433\u0443\u0441"
-  playerScores: 0
+  playerId: 14
+  playerName: Dawn
+  playerScores: 300
