@@ -14,8 +14,8 @@ using UnityEngine.Events;
 public class MonoActionComponent : MonoBehaviour
 {
     [Header("Mode")]
-    [SerializeField] protected MonoActionController.ScenarioMode m_activationScenarioMode;
-    public MonoActionController.ScenarioMode ActivationScenarioMode => m_activationScenarioMode;
+    [SerializeField] protected ScenarioMode m_activationScenarioMode;
+    public ScenarioMode ActivationScenarioMode => m_activationScenarioMode;
     [SerializeField] protected bool m_alwaysActivate = true;
     public bool AlwaysActivate => m_alwaysActivate;
 
@@ -41,23 +41,23 @@ public class MonoActionComponent : MonoBehaviour
     private bool isAllowedToActivate;
     public bool IsAllowedToActivate => isAllowedToActivate;
 
-    protected MonoActionController.ScenarioMode currentScenarioMode;
+    protected ScenarioMode currentScenarioMode;
 
-
-    public virtual void SetRuntimeMode(MonoActionController.ScenarioMode _scenarioMode)
+    protected Character currentCharacter;
+    public virtual void SetRuntimeMode(ScenarioMode _scenarioMode)
     {
         isAllowedToActivate = m_alwaysActivate || m_activationScenarioMode == _scenarioMode;
         currentScenarioMode = _scenarioMode;
     }
 
-    public virtual void SetupComponent()
+    public virtual void SetupComponent(Character character)
     {
         if (isAllowedToActivate)
         {        
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
             OnSetup?.Invoke();
-           
+            currentCharacter = character;
         }
         else
         {

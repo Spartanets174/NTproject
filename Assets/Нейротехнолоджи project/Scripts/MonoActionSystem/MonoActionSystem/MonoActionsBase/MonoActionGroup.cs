@@ -43,11 +43,11 @@ public class MonoActionGroup : MonoBehaviour
     public event Action OnCoreCompleted = null;
 
 
-    protected MonoActionController.ScenarioMode selectedScenarioMode;
-    public MonoActionController.ScenarioMode SelectedScenarioMode => selectedScenarioMode;
+    protected ScenarioMode selectedScenarioMode;
+    public ScenarioMode SelectedScenarioMode => selectedScenarioMode;
 
-    protected MonoActionController.GenderMode selectedGenderMode;
-    public MonoActionController.GenderMode SelectedGenderMode => selectedGenderMode;
+    protected GenderMode selectedGenderMode;
+    public GenderMode SelectedGenderMode => selectedGenderMode;
 
     private Character currentCharacterPrefab;
 
@@ -66,14 +66,14 @@ public class MonoActionGroup : MonoBehaviour
         }
     }
 
-    public void StartGroup(MonoActionController.ScenarioMode scenarioMode, MonoActionController.GenderMode genderMode)
+    public void StartGroup(ScenarioMode scenarioMode, GenderMode genderMode)
     { 
         ResetGroup();
 
         selectedScenarioMode = scenarioMode;
         selectedGenderMode = genderMode;
 
-        currentCharacterPrefab = selectedGenderMode == MonoActionController.GenderMode.Man ? manPrefab : womanPrefab;
+        currentCharacterPrefab = selectedGenderMode == GenderMode.Man ? manPrefab : womanPrefab;
         PerformOnGroupStartedEvent();
 
         GetChildrenCores();

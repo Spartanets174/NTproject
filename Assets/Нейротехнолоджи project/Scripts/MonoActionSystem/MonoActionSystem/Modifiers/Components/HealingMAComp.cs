@@ -6,13 +6,24 @@ using UnityEngine;
 public class HealingMAComp : MonoActionComponent
 {
 
+    [SerializeField]
+    private List<BodyParts> bodyParts;
+    public List<BodyParts> BodyParts => bodyParts;
+    public bool IsRight { get; set; }
 
-
-    public override void SetupComponent()
+    private ScenarioController ScenarioController;
+    public override void SetupComponent(Character character)
     {
+        ScenarioController = FindFirstObjectByType<ScenarioController>();
+        ScenarioController.IsHealingProcess = true;
         if (IsAllowedToActivate)
         {
-           
+            _isComponentActive = true;
+            OnSetupEvent?.Invoke();
+            OnSetup?.Invoke();
+            currentCharacter = character;
+
+            IsRight = false;
         }
         else
         {
@@ -24,6 +35,7 @@ public class HealingMAComp : MonoActionComponent
     public override void CompleteComponent()
     {
         LocalReset();
+        ScenarioController.IsHealingProcess = false;
         base.CompleteComponent();
     }
 
@@ -41,8 +53,16 @@ public class HealingMAComp : MonoActionComponent
 
     private void LocalReset()
     {
-   
+        IsRight = false;
     }
 
 
+}
+
+public enum BodyParts
+{
+    None,
+    a,
+    b,
+    c
 }

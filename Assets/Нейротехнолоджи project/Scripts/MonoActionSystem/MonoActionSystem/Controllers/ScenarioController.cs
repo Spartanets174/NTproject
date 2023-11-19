@@ -1,7 +1,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 ///     Будет обрабатывать текущий шаг и текущее действие
@@ -14,20 +17,49 @@ public class ScenarioController : MonoActionController, IBootstrapper
     public event Action OnStepCompleted = null;
     public event Action OnScenarioStarted = null;
     public event Action OnScenarioEnded = null;
+    public event Action OnHealingProcessStarted = null;
 
+    [SerializeField]
+    private PlayerData playerData;
+
+    private bool m_isHealingProcess;
+    public bool IsHealingProcess
+    {
+        get { return m_isHealingProcess;}
+        set 
+        {  
+            m_isHealingProcess = value;
+            if (m_isHealingProcess)
+            {
+                OnHealingProcessStarted?.Invoke();
+            }
+        }
+    }
 
     private int currentStepIndex;
     public int CurrentStepIndex => currentStepIndex;
 
-    private bool m_isInitialized;
-    public bool IsInitialized => m_isInitialized;
+    private int m_scores;
+    public int Score => m_scores;
+
+    private int m_combo;
+    public int Combo => m_combo;
+
+    private int m_rightDotsCount;
+    public int RightDotsCount => m_rightDotsCount;
+
+    private int m_dotsCount;
+    public int DotsCount => m_dotsCount;
+
+    private DbManager dbManager;
+
+    public DbManager DbManager => dbManager;
+
 
 
     public void Init()
     {
-        if (m_isInitialized) return;
-
-        m_isInitialized = true;
+        dbManager = FindObjectOfType<DbManager>();
     }
 
     private void OnDestroy()
@@ -41,13 +73,13 @@ public class ScenarioController : MonoActionController, IBootstrapper
 
 
     [ContextMenu("Начать сценарий")]
-    public void StartScenario(ScenarioMode scenarioMode)
+    public void StartScenario(ScenarioMode scenarioMode, GenderMode genderMode)
     {
 
         SelectGroup(0);
 
         selectedScenarioMode = scenarioMode;
-
+        selectedGenderMode = genderMode;
 
         selectedMonoActionGroup.OnCoreSetup += StepStartedHandler;
         selectedMonoActionGroup.OnCoreCompleted += StepCompletedHandler;
@@ -69,23 +101,8 @@ public class ScenarioController : MonoActionController, IBootstrapper
             _selectedMonoActionGroup = null;
         }
 
+        SceneManager.LoadScene("Menu");
         OnScenarioEnded?.Invoke();
-    }
-
-    public override void StartSelectedGroup()
-    {
-        if (_selectedMonoActionGroup != null)
-        {
-            _selectedMonoActionGroup.OnGroupEnded += OnGroupEndedHandler;
-
-            _selectedMonoActionGroup.StartGroup(selectedScenarioMode, selectedGenderMode); ;
-
-            PerformOnGroupStartEvent();
-        }
-        else
-        {
-            Debug.LogError($"Группа действий не выбрана!!!");
-        }
     }
 
 
@@ -93,37 +110,13 @@ public class ScenarioController : MonoActionController, IBootstrapper
     {
 
         base.OnGroupEndedHandler();
-
         if (selectedScenarioMode == ScenarioMode.Exam)
         {
-           
-
-            float maxScores = 0;
-            float currentScores = 0;
-
-           /* foreach (RepairableReportData data in controller.RepairableReportDatas)
+            if (Score> playerData.playerScores)
             {
-                foreach (var item in data.observers)
-                {
-                    maxScores++;
-                    if (item.CurrentRepairIndex == item.RepairIndex)
-                    {
-                        currentScores++;
-                    }
-                }
-            }
-            foreach (DefectoscopyReportData data in controller.DefectoscopyReportDatas)
-            {
-                foreach (var item in data.DefectDatas)
-                {
-                    maxScores++;
-                    if (item.isCorrect)
-                    {
-                        currentScores++;
-                    }
-                }
-            }
-            plStudySender.SendResult(currentScores, maxScores);*/
+                playerData.playerScores = Score;
+                dbManager.UpdatePlayerScore();
+            }        
         }
     }
 
@@ -139,5 +132,26 @@ public class ScenarioController : MonoActionController, IBootstrapper
         OnStepCompleted?.Invoke();
     }
 
-  
+    public void AddScores()
+    {
+        m_scores += 10 + 10 * m_combo;
+    }
+
+    public void AddCombo()
+    {
+        m_combo++;
+    }
+    public void ResetCombo()
+    {
+        m_combo=0;
+    }
+
+    public void AddDots()
+    {
+        m_dotsCount++;
+    }
+    public void AddRightDots()
+    {
+        m_rightDotsCount++;
+    }
 }

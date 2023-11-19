@@ -9,9 +9,7 @@ using UnityEngine;
 /// </summary>
 public class MonoActionController : MonoBehaviour
 {
-    public enum ScenarioMode { Training, Exam };
-    public enum GenderMode { Man, Woman };
-    public enum SportMode { Inside, Outside };
+  
     [Header("Список доступных ядер")]
     [SerializeField] protected List<MonoActionGroup> _monoActionGroups = new List<MonoActionGroup>();
 
@@ -101,3 +99,7 @@ public class MonoActionController : MonoBehaviour
         OnGroupEnded?.Invoke();
     }
 }
+
+public enum ScenarioMode { Training, Exam };
+public enum GenderMode { Man, Woman };
+public enum SportMode { Inside, Outside };

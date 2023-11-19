@@ -1,59 +1,80 @@
-/*using PLCore.PLInteractionToolkit;
-using PLCore.PLUnity.MVPReactive;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using static MonoActionController;
 
-public class ScenarioInvokerView : PresenterBehaviour<ScenarioController>, IBootstrapper
+public class ScenarioInvokerView : MonoBehaviour
 {
-    private bool m_isInitialized;
-    public bool IsInitialized => m_isInitialized;
+    [Header("Buttons")]
+    [SerializeField]
+    private Button StartExamButton;
+    [SerializeField]
+    private Button StartTrainingButton;
+    [SerializeField]
+    private Button SelectManButton;
+    [SerializeField]
+    private Button SelectWomanButton;
 
-    private TabMenuPresenter tabMenuPresenter;
+    [Space, Header("Objects")]
+    [SerializeField]
+    private GameObject ScenarioModeButtons;
+    [SerializeField]
+    private GameObject GenderModeButtons;
 
-    public void InitializeBootstrapper()
+    private ScenarioController scenarioController;
+
+    private GenderMode genderMode;
+    private ScenarioMode scenarioMode;
+
+    public void Start()
     {
-        if (m_isInitialized) return;
+        scenarioController =FindObjectOfType<ScenarioController>();
 
-        m_isInitialized = true;
+        StartExamButton.onClick.AddListener(StartExam);
+        StartTrainingButton.onClick.AddListener(StartTraining);
+        SelectManButton.onClick.AddListener(SelectMan);
+        SelectWomanButton.onClick.AddListener(SelectWoman);
 
-        InjectModel(SimpleObjectFinder.TryFindComponentAtScene<ScenarioController>());
-
-        tabMenuPresenter = SimpleObjectFinder.TryFindComponentAtScene<TabMenuPresenter>();
+        ScenarioModeButtons.SetActive(false);
     }
 
-    protected override void OnInjectModel(ScenarioController model) { }
-
-    protected override void OnRemoveModel(ScenarioController model) { }
-
-    private void OnEnable()
+    private void OnDestroy()
     {
-        this.gameObject.SetActive(true);
-
-        if (tabMenuPresenter != null)
-            tabMenuPresenter.isAllowedToOpenTabMenu = false;
+        StartExamButton.onClick.RemoveListener(StartExam);
+        StartTrainingButton.onClick.RemoveListener(StartTraining);
+        SelectManButton.onClick.RemoveListener(SelectMan);
+        SelectWomanButton.onClick.RemoveListener(SelectWoman);
     }
 
-    [MVPMethod]
-    public void StartExam()
+    private void SelectMan()
     {
-        model.StartScenario(MonoActionController.ScenarioMode.Exam);
-
-        this.gameObject.SetActive(false);
-        
-        if (tabMenuPresenter != null)
-            tabMenuPresenter.isAllowedToOpenTabMenu = true;
+        genderMode= GenderMode.Man;
+        ToggleWindows();
+    }
+    private void SelectWoman()
+    {
+        genderMode = GenderMode.Woman;
+        ToggleWindows();
     }
 
-    [MVPMethod]
-    public void StartTraining()
+    private void StartExam()
     {
-        model.StartScenario(MonoActionController.ScenarioMode.Training);
+        scenarioMode = ScenarioMode.Exam;
+        scenarioController.StartScenario(scenarioMode, genderMode);
+        gameObject.SetActive(false);
+    }
 
-        this.gameObject.SetActive(false);
+    private void StartTraining()
+    {
+        scenarioMode = ScenarioMode.Training;
+        scenarioController.StartScenario(scenarioMode, genderMode);
+        gameObject.SetActive(false);
+    }
 
-        if (tabMenuPresenter != null)   
-            tabMenuPresenter.isAllowedToOpenTabMenu = true;
+    private void ToggleWindows()
+    {
+        GenderModeButtons.active = !GenderModeButtons.active;
+        ScenarioModeButtons.active = !ScenarioModeButtons.active;
     }
 }
-*/

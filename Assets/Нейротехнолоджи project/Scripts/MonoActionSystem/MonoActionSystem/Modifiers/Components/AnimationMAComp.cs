@@ -1,20 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationMAComp : MonoActionComponent
 {
-    public override void SetupComponent()
+    public event Action OnAnimationEnded;
+    public override void SetupComponent(Character character)
     {
         if (IsAllowedToActivate)
         {
+            _isComponentActive = true;
+            OnSetupEvent?.Invoke();
+            OnSetup?.Invoke();
+            currentCharacter = character;
 
+            character.OnAnimationEnd += onAnimationEndedInvoke;
+            character.StartTraumaAnimation();
+            
         }
         else
         {
             CompleteComponent();
         }
 
+    }
+
+    private void  onAnimationEndedInvoke()
+    {
+        OnAnimationEnded?.Invoke();
     }
 
     public override void CompleteComponent()

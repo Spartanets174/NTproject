@@ -14,6 +14,7 @@ public class MonoActionCore : MonoBehaviour
 {   
    
     public event Action OnCoreSetup = null;
+    public event Action OnComponentSetup = null;
     public event Action OnComponentCompleted = null;
     public event Action OnAllComponentsEndedWork = null;
 
@@ -22,14 +23,14 @@ public class MonoActionCore : MonoBehaviour
 
 
     [Header("Mode")]
-    [SerializeField] protected MonoActionController.ScenarioMode m_activationScenarioMode;
-    public MonoActionController.ScenarioMode ActivationScenarioMode => m_activationScenarioMode;
+    [SerializeField] protected ScenarioMode m_activationScenarioMode;
+    public ScenarioMode ActivationScenarioMode => m_activationScenarioMode;
 
     [SerializeField] protected bool m_alwaysActivate = true;
     public bool AlwaysActivate => m_alwaysActivate;
 
-    protected MonoActionController.ScenarioMode selectedScenarioMode;
-    public MonoActionController.ScenarioMode SelectedScenarioMode => selectedScenarioMode;
+    protected ScenarioMode selectedScenarioMode;
+    public ScenarioMode SelectedScenarioMode => selectedScenarioMode;
 
 
     protected int _completedComponents = 0;
@@ -59,9 +60,11 @@ public class MonoActionCore : MonoBehaviour
         _components = GetComponentsInChildren<MonoActionComponent>().ToList();
     }
 
-    public virtual void SetupCore(MonoActionController.ScenarioMode scenarioMode, Character character)
+    public virtual void SetupCore(ScenarioMode scenarioMode, Character character)
     {
         currentCharacter = Instantiate(character,Vector3.zero,Quaternion.identity, parentToSpawn);
+        currentCharacter.transform.localPosition = Vector3.zero;
+
         selectedScenarioMode = scenarioMode;
 
         GetChildComponents();
@@ -79,10 +82,18 @@ public class MonoActionCore : MonoBehaviour
         }
 
         currentCompIndex++;
-
+        if (_components[currentCompIndex] is HealingMAComp)
+        {           
+            currentCharacter.gameObject.SetActive(false);
+        }
+        else
+        {
+            currentCharacter.gameObject.SetActive(true);
+        }
         _components[currentCompIndex].OnComplete += OnSingleComponentCompleted; 
         _components[currentCompIndex].SetRuntimeMode(selectedScenarioMode);
-        _components[currentCompIndex].SetupComponent();
+        _components[currentCompIndex].SetupComponent(currentCharacter);
+        OnComponentSetup?.Invoke();
     }
 
     public virtual void ResetCore()
@@ -103,6 +114,7 @@ public class MonoActionCore : MonoBehaviour
 
     protected virtual void OnSingleComponentCompleted()
     {
+        
 
         _completedComponents++;
 
@@ -119,7 +131,8 @@ public class MonoActionCore : MonoBehaviour
     }
 
     protected virtual void OnAllComponentsCompleted()
-    {   
+    {
+        Destroy(currentCharacter.gameObject);
         OnAllComponentsEndedWork?.Invoke();
     }
 }
