@@ -9,7 +9,6 @@ public class HealingMAComp : MonoActionComponent
     [SerializeField]
     private List<BodyParts> bodyParts;
     public List<BodyParts> BodyParts => bodyParts;
-    public bool IsRight { get; set; }
 
     private ScenarioController ScenarioController;
     public override void SetupComponent(Character character)
@@ -22,8 +21,6 @@ public class HealingMAComp : MonoActionComponent
             OnSetupEvent?.Invoke();
             OnSetup?.Invoke();
             currentCharacter = character;
-
-            IsRight = false;
         }
         else
         {
@@ -53,7 +50,7 @@ public class HealingMAComp : MonoActionComponent
 
     private void LocalReset()
     {
-        IsRight = false;
+
     }
 
 

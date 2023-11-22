@@ -14,4 +14,18 @@ public class ScenarioMAGroup : MonoActionGroup
     [TextArea(10, 100)]
     private string m_scenarioDescription;
     public string ScenarioDescription => m_scenarioDescription;
+
+    [SerializeField]
+    private Sprite insideFonSprite;
+    [SerializeField]
+    private Sprite outsideFonSprite;
+    [SerializeField]
+    private SpriteRenderer FonImage;
+
+    public override void SetupNextCore()
+    {
+        base.SetupNextCore();
+
+        FonImage.sprite = _currentCoreInAction.SportMode == SportMode.Inside ? insideFonSprite : outsideFonSprite;
+    }
 }

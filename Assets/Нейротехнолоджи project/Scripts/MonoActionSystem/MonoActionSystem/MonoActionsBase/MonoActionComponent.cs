@@ -44,6 +44,7 @@ public class MonoActionComponent : MonoBehaviour
     protected ScenarioMode currentScenarioMode;
 
     protected Character currentCharacter;
+    public Character CurrentCharacter => currentCharacter;
     public virtual void SetRuntimeMode(ScenarioMode _scenarioMode)
     {
         isAllowedToActivate = m_alwaysActivate || m_activationScenarioMode == _scenarioMode;

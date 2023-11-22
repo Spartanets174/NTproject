@@ -8,7 +8,7 @@ public static class ConnectionInfo
     public static string ip = "127.0.0.1";
     public static string uid = "root";
     public static string pwd = "12345";
-    public static string database = "dbнейротехнолоджи";
+    public static string database = "dbneiro";
 }
 
 public class DbManager : MonoBehaviour

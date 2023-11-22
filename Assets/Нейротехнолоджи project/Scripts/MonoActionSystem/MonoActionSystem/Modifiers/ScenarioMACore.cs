@@ -15,4 +15,5 @@ public class ScenarioMACore : MonoActionCore
     [SerializeField]
     private string m_description;
     public string Description => m_description;
+
 }

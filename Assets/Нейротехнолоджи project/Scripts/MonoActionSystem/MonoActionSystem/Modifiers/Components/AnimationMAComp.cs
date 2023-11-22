@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class AnimationMAComp : MonoActionComponent
 {
+    [SerializeField]
+    private string animationClip;
+  
     public event Action OnAnimationEnded;
     public override void SetupComponent(Character character)
     {
@@ -16,8 +19,8 @@ public class AnimationMAComp : MonoActionComponent
             currentCharacter = character;
 
             character.OnAnimationEnd += onAnimationEndedInvoke;
-            character.StartTraumaAnimation();
-            
+            character.StartAnimation(animationClip);
+
         }
         else
         {

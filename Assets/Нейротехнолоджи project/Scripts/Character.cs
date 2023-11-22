@@ -9,38 +9,22 @@ public class Character : MonoBehaviour
     [SerializeField]
     private Animator animationCharacter;
 
+    public bool isRightExercise { get; set; } = false;
+
     public event Action OnAnimationStart;
     public event Action OnAnimationEnd;
 
-    public void StartTraumaAnimation()
-    {
-        animationCharacter.SetBool("isTraumaAnimation", true);
-        OnAnimationStart?.Invoke();
-    }
-    public void StartSuccessfulAnimation()
-    {
-        animationCharacter.SetBool("isSuccessfulAnimation", true);
-        OnAnimationStart?.Invoke();
-    }
-    public void StartFailAnimation()
-    {
-        animationCharacter.SetBool("isFailAnimation",true);
-        OnAnimationStart?.Invoke();
-    }
+    private string lastPlayableAnim;
 
-    public void EndTraumaAnimation()
+    public void StartAnimation(string anim)
     {
-        animationCharacter.SetBool("isTraumaAnimation", false);
-        OnAnimationEnd?.Invoke();
+        lastPlayableAnim = anim;
+        animationCharacter.SetBool(anim, true);
+        OnAnimationStart?.Invoke();
     }
-    public void EndSuccessfulAnimation()
+    public void EndAnimation()
     {
-        animationCharacter.SetBool("isSuccessfulAnimation", false);
+        animationCharacter.SetBool(lastPlayableAnim, false);
         OnAnimationEnd?.Invoke();
-    }
-    public void EndFailAnimation()
-    {
-        animationCharacter.SetBool("isFailAnimation", false);
-        OnAnimationEnd?.Invoke();
-    }
+    }  
 }

@@ -25,6 +25,8 @@ public class MonoActionCore : MonoBehaviour
     [Header("Mode")]
     [SerializeField] protected ScenarioMode m_activationScenarioMode;
     public ScenarioMode ActivationScenarioMode => m_activationScenarioMode;
+    [SerializeField] protected SportMode m_sportMode;
+    public SportMode SportMode => m_sportMode;
 
     [SerializeField] protected bool m_alwaysActivate = true;
     public bool AlwaysActivate => m_alwaysActivate;

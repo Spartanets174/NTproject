@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -31,7 +31,7 @@ public class HealingProcessWindow : MonoBehaviour
             SetupForWoman();
         }
 
-        HealingMAComp.OnComplete += OnComplete;
+        HealingMAComp.OnCompleteEvent.AddListener(OnComplete);
         gameObject.SetActive(true);
         ResetHealingProcess();
 
@@ -60,34 +60,53 @@ public class HealingProcessWindow : MonoBehaviour
 
     private void OnComplete()
     {
-        int count=0;
+        CheckPoints();
+        ResetPoints();
+        this.gameObject.SetActive(false);
+    }
+    private void CheckPoints()
+    {
+        int rightCount = 0;
+        List<PainPoint> chosenPainPoints = PainPoints.FindAll(x => x.IsChosen);
+        if (chosenPainPoints.Count> HealingMAComp.BodyParts.Count)
+        {
+            ScenarioController.ResetCombo();
+            return;
+        }
         foreach (var part in HealingMAComp.BodyParts)
         {
-            foreach (var point in PainPoints)
+            PainPoint painPoint = chosenPainPoints.Find(x=>x.BodyPart == part);
+            if (IsRightPoint(painPoint))
             {
-                if (point.IsChosen&& part == point.BodyPart)
-                {
-                    count++;
-                    ScenarioController.AddScores();
-                    ScenarioController.AddCombo();
-                    ScenarioController.AddRightDots();
-                }
-                else
-                {
-                    ScenarioController.ResetCombo();
-                }
+                rightCount++;
             }
         }
-        if (count== HealingMAComp.BodyParts.Count)
+        if (rightCount == HealingMAComp.BodyParts.Count)
         {
-            HealingMAComp.IsRight = true;
+            HealingMAComp.CurrentCharacter.isRightExercise = true;
         }
         else
         {
-            HealingMAComp.IsRight = false;
+            HealingMAComp.CurrentCharacter.isRightExercise = false;
         }
-        this.gameObject.SetActive(false);
+        Debug.Log(rightCount);
     }
+    private bool IsRightPoint(PainPoint point)
+    {
+        if (point != null)
+        {
+            ScenarioController.AddScores();
+            ScenarioController.AddCombo();
+            ScenarioController.AddRightDots();
+            return true;
+        }
+        else
+        {
+            ScenarioController.ResetCombo();
+            return false;
+        }
+    }
+
     public void ResetHealingProcess()
     {
         foreach (var item in PainPoints)
@@ -100,21 +119,21 @@ public class HealingProcessWindow : MonoBehaviour
     {        
         if (PainPoints.FindAll(x=>x.IsChosen).Count>=2)
         {
-            TogglePointsState(false);
+           /* TogglePointsState(false);*/
             OnPointsChosen?.Invoke();
         }
         else
         {
-            TogglePointsState(true);
+            /*TogglePointsState(true);*/
             OnPointsUnChosen?.Invoke();
         }
     }
 
-    private void TogglePointsState(bool state)
+    private void ResetPoints()
     {
         foreach (var item in PainPoints)
         {
-            item.IsAllowedToClick = state;
+            item.SetNormalState();
         }
     }
 }

@@ -1,8 +1,5 @@
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +11,7 @@ using UnityEngine.SceneManagement;
 public class ScenarioController : MonoActionController, IBootstrapper
 {
     public event Action OnStepSetup = null;
+    public event Action OnStepPreSetup = null;
     public event Action OnStepCompleted = null;
     public event Action OnScenarioStarted = null;
     public event Action OnScenarioEnded = null;
@@ -66,6 +64,7 @@ public class ScenarioController : MonoActionController, IBootstrapper
     {
         if (selectedMonoActionGroup != null)
         {
+            selectedMonoActionGroup.OnCorePreSetup -= StepPreStartedHandler;
             selectedMonoActionGroup.OnCoreSetup -= StepStartedHandler;
             selectedMonoActionGroup.OnCoreCompleted -= StepCompletedHandler;
         }
@@ -81,6 +80,7 @@ public class ScenarioController : MonoActionController, IBootstrapper
         selectedScenarioMode = scenarioMode;
         selectedGenderMode = genderMode;
 
+        selectedMonoActionGroup.OnCorePreSetup += StepPreStartedHandler;
         selectedMonoActionGroup.OnCoreSetup += StepStartedHandler;
         selectedMonoActionGroup.OnCoreCompleted += StepCompletedHandler;
 
@@ -93,6 +93,7 @@ public class ScenarioController : MonoActionController, IBootstrapper
     {
         if (_selectedMonoActionGroup != null)
         {
+            selectedMonoActionGroup.OnCorePreSetup -= StepPreStartedHandler;
             selectedMonoActionGroup.OnCoreSetup -= StepStartedHandler;
             selectedMonoActionGroup.OnCoreCompleted -= StepCompletedHandler;
 
@@ -126,6 +127,11 @@ public class ScenarioController : MonoActionController, IBootstrapper
         OnStepSetup?.Invoke();
     }
 
+    private void StepPreStartedHandler()
+    {
+        OnStepPreSetup?.Invoke();
+    }
+
     private void StepCompletedHandler()
     {
         currentStepIndex++;
@@ -145,7 +151,10 @@ public class ScenarioController : MonoActionController, IBootstrapper
     {
         m_combo=0;
     }
-
+    public void MinusRightDots()
+    {
+        m_rightDotsCount --;
+    }
     public void AddDots()
     {
         m_dotsCount++;

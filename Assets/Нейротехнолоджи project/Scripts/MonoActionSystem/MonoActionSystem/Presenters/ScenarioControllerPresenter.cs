@@ -46,7 +46,7 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
         scenarioController.OnGroupStarted += OnScenarioStarted;
         scenarioController.OnGroupEnded += OnScenarioEnded;
 
-        scenarioController.OnStepSetup += CoreOnStepSetup;
+        scenarioController.OnStepPreSetup += CoreOnPreStepSetup;
 
         scenarioController.OnHealingProcessStarted += SetupHealingProcessWindow;
 
@@ -102,17 +102,22 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
         IsScenarioTrain = false;
     }
 
-    private void CoreOnStepSetup()
+    private void CoreOnPreStepSetup()
     {
         currentCore = (ScenarioMACore)scenarioController.selectedMonoActionGroup.CurrentCoreInAction;
         foreach (var item in currentCore.components)
         {
             item.OnSetup += DisableNextStepButton;
-            /*if (item is AnimationMAComp)
+            if (item is AnimationMAComp)
             {
                 AnimationMAComp comp = (AnimationMAComp)item;
-                comp.onAnimationEnded += EnableNextStepButton;
-            }*/
+                comp.OnAnimationEnded += EnableNextStepButton;
+            }
+            if (item is RightWrongAnimationMAComp)
+            {
+                RightWrongAnimationMAComp comp = (RightWrongAnimationMAComp)item;
+                comp.OnAnimationEnded += EnableNextStepButton;
+            }
         }
     }
 

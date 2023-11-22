@@ -18,14 +18,10 @@ public class PainPoint : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     private bool isChosen;
     public bool IsChosen=>isChosen;
 
-    private bool m_isAllowedToClick;
+
 
     private Image image;
-    public bool IsAllowedToClick
-    {
-        get => m_isAllowedToClick;
-        set => m_isAllowedToClick = value;
-    }
+
     private void Start()
     {
         image = GetComponent<Image>();
@@ -33,18 +29,14 @@ public class PainPoint : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (IsAllowedToClick)
-        {
-            isChosen = !isChosen;
-            OnClick.Invoke();
-            image.DOFade(0.5f, 0);
-        }     
+        isChosen = !isChosen;
+        OnClick.Invoke();
+        image.DOFade(0.5f, 0);
     }
 
     public void ResetPoint()
     {
         isChosen = false;
-        m_isAllowedToClick = true;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -59,8 +51,12 @@ public class PainPoint : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     {
         if (!isChosen)
         {
-            image.DOFade(1, 0);
-        }
-        
+            SetNormalState();
+        }       
+    }
+
+    public void SetNormalState()
+    {
+        image.DOFade(1, 0);
     }
 }

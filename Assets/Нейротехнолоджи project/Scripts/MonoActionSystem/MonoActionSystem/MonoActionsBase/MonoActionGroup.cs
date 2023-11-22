@@ -40,6 +40,7 @@ public class MonoActionGroup : MonoBehaviour
     public event Action OnGroupEnded = null;
     
     public event Action OnCoreSetup = null;
+    public event Action OnCorePreSetup = null;
     public event Action OnCoreCompleted = null;
 
 
@@ -86,7 +87,7 @@ public class MonoActionGroup : MonoBehaviour
         SetupNextCore();
     }
 
-    public void SetupNextCore()
+    public virtual void SetupNextCore()
     {
         if (_currentCoreInAction != null)
         {
@@ -103,6 +104,9 @@ public class MonoActionGroup : MonoBehaviour
         {
             _currentCoreInAction = _actionCores[_currentCoreIndex];
             _currentCoreInAction.OnAllComponentsEndedWork += OnAllComponentsEndedWork;
+
+            PerformOnCorePreSetupEvent();
+
             _currentCoreInAction.SetupCore(selectedScenarioMode, currentCharacterPrefab);
 
             PerformOnCoreSetupEvent();
@@ -134,6 +138,12 @@ public class MonoActionGroup : MonoBehaviour
     {
         OnCoreSetup?.Invoke();
     }
+
+    protected void PerformOnCorePreSetupEvent()
+    {
+        OnCorePreSetup?.Invoke();
+    }
+
     protected void PerformOnCoreCompletedEvent()
     {
         OnCoreCompleted?.Invoke();
