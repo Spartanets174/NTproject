@@ -14,13 +14,6 @@ using UnityEditor;
 /// </summary>
 public class MonoActionGroup : MonoBehaviour
 {
-    [Header("Characters")]
-    [SerializeField]
-    private Character womanPrefab;
-    [SerializeField]
-    private Character manPrefab;
-
-
     protected List<MonoActionCore> _actionCores = new List<MonoActionCore>();
     public List<MonoActionCore> ActionCores => _actionCores;
 
@@ -50,8 +43,6 @@ public class MonoActionGroup : MonoBehaviour
     protected GenderMode selectedGenderMode;
     public GenderMode SelectedGenderMode => selectedGenderMode;
 
-    private Character currentCharacterPrefab;
-
 
     [ContextMenu("Get Children Cores")]
     private void GetChildrenCores()
@@ -74,7 +65,6 @@ public class MonoActionGroup : MonoBehaviour
         selectedScenarioMode = scenarioMode;
         selectedGenderMode = genderMode;
 
-        currentCharacterPrefab = selectedGenderMode == GenderMode.Man ? manPrefab : womanPrefab;
         PerformOnGroupStartedEvent();
 
         GetChildrenCores();
@@ -107,7 +97,7 @@ public class MonoActionGroup : MonoBehaviour
 
             PerformOnCorePreSetupEvent();
 
-            _currentCoreInAction.SetupCore(selectedScenarioMode, currentCharacterPrefab);
+            _currentCoreInAction.SetupCore(selectedScenarioMode, selectedGenderMode);
 
             PerformOnCoreSetupEvent();
         }

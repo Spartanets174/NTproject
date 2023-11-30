@@ -42,23 +42,30 @@ public class MonoActionComponent : MonoBehaviour
     public bool IsAllowedToActivate => isAllowedToActivate;
 
     protected ScenarioMode currentScenarioMode;
+    protected GenderMode currentGenderMode;
+    protected SportType currentsportType;
 
     protected Character currentCharacter;
     public Character CurrentCharacter => currentCharacter;
+
+    protected ScenarioController scenarioController;
+
     public virtual void SetRuntimeMode(ScenarioMode _scenarioMode)
     {
         isAllowedToActivate = m_alwaysActivate || m_activationScenarioMode == _scenarioMode;
         currentScenarioMode = _scenarioMode;
     }
 
-    public virtual void SetupComponent(Character character)
+    public virtual void SetupComponent(GenderMode genderMode, SportType sportType)
     {
         if (isAllowedToActivate)
         {        
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
             OnSetup?.Invoke();
-            currentCharacter = character;
+            currentGenderMode = genderMode;
+            currentsportType = sportType;
+            scenarioController = FindObjectOfType<ScenarioController>();
         }
         else
         {

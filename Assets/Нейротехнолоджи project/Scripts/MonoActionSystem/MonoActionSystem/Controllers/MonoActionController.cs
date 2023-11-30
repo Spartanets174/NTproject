@@ -102,4 +102,8 @@ public class MonoActionController : MonoBehaviour
 
 public enum ScenarioMode { Training, Exam };
 public enum GenderMode { Man, Woman };
+
+public enum AnimationType { Success, Failure, Trauma };
+
+public enum SportType { Run, KettlebellSnatch, Basketball, Tennis, Workout };
 public enum SportMode { Inside, Outside };

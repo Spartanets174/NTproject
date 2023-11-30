@@ -83,11 +83,11 @@ public class HealingProcessWindow : MonoBehaviour
         }
         if (rightCount == HealingMAComp.BodyParts.Count)
         {
-            HealingMAComp.CurrentCharacter.isRightExercise = true;
+            ScenarioController.isRightExercise = true;
         }
         else
         {
-            HealingMAComp.CurrentCharacter.isRightExercise = false;
+            ScenarioController.isRightExercise = false;
         }
         Debug.Log(rightCount);
     }

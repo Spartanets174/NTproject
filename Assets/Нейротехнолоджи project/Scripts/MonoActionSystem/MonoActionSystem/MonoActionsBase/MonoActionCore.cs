@@ -18,21 +18,25 @@ public class MonoActionCore : MonoBehaviour
     public event Action OnComponentCompleted = null;
     public event Action OnAllComponentsEndedWork = null;
 
-    [SerializeField]
-    private Transform parentToSpawn;
+ 
 
 
-    [Header("Mode")]
+    [Header("Modes")]
     [SerializeField] protected ScenarioMode m_activationScenarioMode;
     public ScenarioMode ActivationScenarioMode => m_activationScenarioMode;
     [SerializeField] protected SportMode m_sportMode;
     public SportMode SportMode => m_sportMode;
+
+    [SerializeField] protected SportType m_sportType;
+    public SportType SportType => m_sportType;
 
     [SerializeField] protected bool m_alwaysActivate = true;
     public bool AlwaysActivate => m_alwaysActivate;
 
     protected ScenarioMode selectedScenarioMode;
     public ScenarioMode SelectedScenarioMode => selectedScenarioMode;
+    protected GenderMode selectedGenderMode;
+    public GenderMode SelectedGenderMode => selectedGenderMode;
 
 
     protected int _completedComponents = 0;
@@ -55,18 +59,13 @@ public class MonoActionCore : MonoBehaviour
         }
     }
 
-    private Character currentCharacter;
-
     private void GetChildComponents()
     {
         _components = GetComponentsInChildren<MonoActionComponent>().ToList();
     }
 
-    public virtual void SetupCore(ScenarioMode scenarioMode, Character character)
+    public virtual void SetupCore(ScenarioMode scenarioMode, GenderMode genderMode)
     {
-        currentCharacter = Instantiate(character,Vector3.zero,Quaternion.identity, parentToSpawn);
-        currentCharacter.transform.localPosition = Vector3.zero;
-
         selectedScenarioMode = scenarioMode;
 
         GetChildComponents();
@@ -84,17 +83,9 @@ public class MonoActionCore : MonoBehaviour
         }
 
         currentCompIndex++;
-        if (_components[currentCompIndex] is HealingMAComp)
-        {           
-            currentCharacter.gameObject.SetActive(false);
-        }
-        else
-        {
-            currentCharacter.gameObject.SetActive(true);
-        }
         _components[currentCompIndex].OnComplete += OnSingleComponentCompleted; 
         _components[currentCompIndex].SetRuntimeMode(selectedScenarioMode);
-        _components[currentCompIndex].SetupComponent(currentCharacter);
+        _components[currentCompIndex].SetupComponent(selectedGenderMode, m_sportType);
         OnComponentSetup?.Invoke();
     }
 
@@ -102,7 +93,6 @@ public class MonoActionCore : MonoBehaviour
     {
 
         currentCompIndex = -1;
-        Destroy(currentCharacter);
         _isCoreCompleted = false;
         _completedComponents = 0;
 
@@ -134,7 +124,6 @@ public class MonoActionCore : MonoBehaviour
 
     protected virtual void OnAllComponentsCompleted()
     {
-        Destroy(currentCharacter.gameObject);
         OnAllComponentsEndedWork?.Invoke();
     }
 }

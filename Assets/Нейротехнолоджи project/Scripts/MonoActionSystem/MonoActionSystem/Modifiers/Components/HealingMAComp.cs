@@ -10,17 +10,18 @@ public class HealingMAComp : MonoActionComponent
     private List<BodyParts> bodyParts;
     public List<BodyParts> BodyParts => bodyParts;
 
-    private ScenarioController ScenarioController;
-    public override void SetupComponent(Character character)
+    public override void SetupComponent(GenderMode genderMode, SportType sportType)
     {
-        ScenarioController = FindFirstObjectByType<ScenarioController>();
-        ScenarioController.IsHealingProcess = true;
+       
         if (IsAllowedToActivate)
         {
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
             OnSetup?.Invoke();
-            currentCharacter = character;
+            currentGenderMode = genderMode;
+            currentsportType = sportType;
+            scenarioController = FindObjectOfType<ScenarioController>();
+            scenarioController.IsHealingProcess = true;
         }
         else
         {
@@ -32,7 +33,7 @@ public class HealingMAComp : MonoActionComponent
     public override void CompleteComponent()
     {
         LocalReset();
-        ScenarioController.IsHealingProcess = false;
+        scenarioController.IsHealingProcess = false;
         base.CompleteComponent();
     }
 

@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,16 @@ public class ScenarioController : MonoActionController, IBootstrapper
     [SerializeField]
     private PlayerData playerData;
 
+    [Header("Characters")]
+    [SerializeField]
+    private List<Character> m_womanPrefabs;
+    public List<Character> WomanPrefabs => m_womanPrefabs;
+
+    [SerializeField]
+    private List<Character> manPrefabs;
+
+    public List<Character> ManPrefabs => manPrefabs;
+
     private bool m_isHealingProcess;
     public bool IsHealingProcess
     {
@@ -33,6 +44,8 @@ public class ScenarioController : MonoActionController, IBootstrapper
             }
         }
     }
+
+    public bool isRightExercise { get; set; } = false;
 
     private int currentStepIndex;
     public int CurrentStepIndex => currentStepIndex;

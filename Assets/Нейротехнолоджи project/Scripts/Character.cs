@@ -9,22 +9,26 @@ public class Character : MonoBehaviour
     [SerializeField]
     private Animator animationCharacter;
 
-    public bool isRightExercise { get; set; } = false;
+    [SerializeField]
+    private AnimationType m_animationType;
+    public AnimationType AnimationType => m_animationType;
+
+    [SerializeField]
+    private SportType m_sportType;
+    public SportType SportType => m_sportType;
+
+    
 
     public event Action OnAnimationStart;
     public event Action OnAnimationEnd;
 
-    private string lastPlayableAnim;
 
-    public void StartAnimation(string anim)
+    public void StartAnimation()
     {
-        lastPlayableAnim = anim;
-        animationCharacter.SetBool(anim, true);
         OnAnimationStart?.Invoke();
     }
     public void EndAnimation()
     {
-        animationCharacter.SetBool(lastPlayableAnim, false);
         OnAnimationEnd?.Invoke();
     }  
 }

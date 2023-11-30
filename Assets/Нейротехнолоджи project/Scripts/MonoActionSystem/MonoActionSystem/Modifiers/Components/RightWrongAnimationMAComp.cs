@@ -6,30 +6,30 @@ using UnityEngine;
 public class RightWrongAnimationMAComp : MonoActionComponent
 {
     [SerializeField]
-    private string animationWrongClip;
-    [SerializeField]
-    private string animationRightClip;
+    private Transform parentToSpawn;
 
     public event Action OnAnimationEnded;
-    public override void SetupComponent(Character character)
+    public override void SetupComponent(GenderMode genderMode, SportType sportType)
     {
         if (IsAllowedToActivate)
         {
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
             OnSetup?.Invoke();
-            currentCharacter = character;
-
-            currentCharacter.OnAnimationEnd += onAnimationEndedInvoke;
-            if (currentCharacter.isRightExercise)
+            currentGenderMode = genderMode;
+            currentsportType = sportType;
+            scenarioController = FindObjectOfType<ScenarioController>();
+            
+            if (scenarioController.isRightExercise)
             {
-                currentCharacter.StartAnimation(animationRightClip);
+                SetCurrentCharacter(AnimationType.Success);
             }
             else
             {
-                currentCharacter.StartAnimation(animationWrongClip);
+                SetCurrentCharacter(AnimationType.Failure);             
             }
-           
+            currentCharacter.OnAnimationEnd += onAnimationEndedInvoke;
+            currentCharacter.StartAnimation();
         }
         else
         {
@@ -37,6 +37,23 @@ public class RightWrongAnimationMAComp : MonoActionComponent
         }
 
     }
+
+    private void SetCurrentCharacter(AnimationType animationType)
+    {
+        Character character;
+        if (currentGenderMode == GenderMode.Man)
+        {
+            character = scenarioController.ManPrefabs.Find(x => x.AnimationType == animationType && x.SportType == currentsportType);
+        }
+        else
+        {
+            character = scenarioController.WomanPrefabs.Find(x => x.AnimationType == animationType && x.SportType == currentsportType);
+        }
+        currentCharacter=Instantiate(character, parentToSpawn);
+        
+        currentCharacter.transform.localPosition = Vector3.zero;
+    }
+
     private void onAnimationEndedInvoke()
     {
         OnAnimationEnded?.Invoke();
@@ -61,6 +78,6 @@ public class RightWrongAnimationMAComp : MonoActionComponent
 
     private void LocalReset()
     {
-
+        Destroy(currentCharacter.gameObject);
     }
 }
