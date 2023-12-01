@@ -23,13 +23,23 @@ public class SettingsPresenter : MonoBehaviour, IBootstrapper
     [SerializeField]
     private Image musicImage;
 
-    [Space, Header("Images")]
+    [Space, Header("Sound images")]
     [SerializeField]
     private Sprite enabledSoundSprite;
     [SerializeField]
-    private Sprite enabledMusicSprite;
+    private Sprite halfSoundSprite;
+    [SerializeField]
+    private Sprite semihalfSoundSprite;
     [SerializeField]
     private Sprite disabledSoundSprite;
+
+    [Space, Header("Music images")]
+    [SerializeField]
+    private Sprite enabledMusicSprite;
+    [SerializeField]
+    private Sprite halfMusicSprite;
+    [SerializeField]
+    private Sprite semihalfMusicSprite;
     [SerializeField]
     private Sprite disabledMusicSprite;
 
@@ -55,13 +65,45 @@ public class SettingsPresenter : MonoBehaviour, IBootstrapper
 
     private void OnSoundValueChanged(float value)
     {
-        soundImage.sprite = value == 0 ? disabledSoundSprite : enabledSoundSprite;
+        if (value <= 1 && value > 0.66f)
+        {
+            soundImage.sprite = enabledSoundSprite;
+        }
+        if (value <= 0.66f && value > 0.33f)
+        {
+            soundImage.sprite = halfSoundSprite;
+        }
+        if (value <= 0.33f && value >0)
+        {
+            soundImage.sprite = semihalfSoundSprite;
+        }
+        if (value == 0)
+        {
+            soundImage.sprite = disabledSoundSprite;
+        }
+        
         settingsController.ChangeSoundLevel(value);
     }
 
     private void OnMusicValueChanged(float value)
     {
-        musicImage.sprite = value == 0 ? disabledMusicSprite : enabledMusicSprite;
+        if (value <= 1 && value > 0.66f)
+        {
+            musicImage.sprite = enabledMusicSprite;
+        }
+        if (value <= 0.66f && value > 0.33f)
+        {
+            musicImage.sprite = halfMusicSprite;
+        }
+        if (value <= 0.33f && value > 0)
+        {
+            musicImage.sprite = semihalfMusicSprite;
+        }
+        if (value == 0)
+        {
+            musicImage.sprite = disabledMusicSprite;
+        }
+
         settingsController.ChangeMusicLevel(value);
     }
 

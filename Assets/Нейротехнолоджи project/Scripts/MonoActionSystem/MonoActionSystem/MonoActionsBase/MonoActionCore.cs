@@ -67,6 +67,7 @@ public class MonoActionCore : MonoBehaviour
     public virtual void SetupCore(ScenarioMode scenarioMode, GenderMode genderMode)
     {
         selectedScenarioMode = scenarioMode;
+        selectedGenderMode = genderMode;
 
         GetChildComponents();
 

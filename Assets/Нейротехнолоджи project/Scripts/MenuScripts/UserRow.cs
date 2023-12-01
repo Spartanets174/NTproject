@@ -6,23 +6,23 @@ using UnityEngine;
 public class UserRow : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI playerNumber;
+    private TextMeshProUGUI playerNumberAndName;
 
     [SerializeField]
-    private TextMeshProUGUI playerName;
+    private TextMeshProUGUI playerCombo;
 
     [SerializeField]
     private TextMeshProUGUI playerScores;
 
     public void SetData(int number, UserData userData, bool isCurrent)
     {
-        playerNumber.text = "№"+ number.ToString();
-        playerName.text = userData.UserName;
+        playerNumberAndName.text = "#"+ number.ToString()+". "+ userData.UserName;
+        playerCombo.text = userData.UserCombo.ToString();
         playerScores.text = userData.UserScore.ToString();
 
         if (isCurrent)
         {
-            playerName.text += " (Вы)";
+            playerNumberAndName.text += " (Вы)";
         }
     }
 }

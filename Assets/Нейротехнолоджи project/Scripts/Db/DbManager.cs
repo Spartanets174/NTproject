@@ -2,6 +2,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public static class ConnectionInfo
 {
@@ -97,7 +98,8 @@ public class DbManager : MonoBehaviour
                     int id = reader.GetInt32("idUser");
                     string name = reader.GetString("username");
                     int scores = reader.GetInt32("userScore");
-                    users.Add(new UserData(id, name, scores));
+                    int combo = reader.GetInt32("userCombo");
+                    users.Add(new UserData(id, name, scores, combo));
                 }
                 /* reader.Read();*/
                 /*Debug.Log(reader.GetString("name"));*/
@@ -129,7 +131,8 @@ public class DbManager : MonoBehaviour
                 reader.Read();
                 string name = reader.GetString("username");
                 int scores = reader.GetInt32("userScore");
-                UserData user = new(id, name, scores);
+                int combo = reader.GetInt32("userCombo");
+                UserData user = new(id, name, scores, combo);
                 command.Dispose();
                 return user;
             }
@@ -159,7 +162,8 @@ public class DbManager : MonoBehaviour
                 reader.Read();
                 int id = reader.GetInt32("idUser");
                 int scores = reader.GetInt32("userScore");
-                UserData user = new(id, Name, scores);
+                int combo = reader.GetInt32("userCombo");
+                UserData user = new(id, name, scores, combo);
                 command.Dispose();
                 return user;
             }
@@ -196,10 +200,15 @@ public class UserData
     private int m_userScore;
     public int UserScore => m_userScore;
 
-    public UserData(int userId, string userName, int userScore)
+    [SerializeField]
+    private int m_userCombo;
+    public int UserCombo => m_userCombo;
+
+    public UserData(int userId, string userName, int userScore, int userCombo)
     {
         m_userId = userId;
         m_userName = userName;
         m_userScore = userScore;
+        m_userCombo = userCombo;
     }
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3000610139118204413
+--- !u!1001 &5340308035556257987
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -63,25 +63,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7588508631005455375, guid: 2aa80b6382ff19b4182e23d6d31de32d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 84b4eafadf325b141990636cd4e5e045, type: 2}
     - target: {fileID: 919132149155446097, guid: 2aa80b6382ff19b4182e23d6d31de32d, type: 3}
       propertyPath: m_Name
       value: TennisTrawma
       objectReference: {fileID: 0}
+    - target: {fileID: 4982609056237601117, guid: 2aa80b6382ff19b4182e23d6d31de32d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 84b4eafadf325b141990636cd4e5e045, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2aa80b6382ff19b4182e23d6d31de32d, type: 3}
---- !u!1 &2694602660931061932 stripped
+--- !u!1 &5106514684709932434 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2aa80b6382ff19b4182e23d6d31de32d, type: 3}
-  m_PrefabInstance: {fileID: 3000610139118204413}
+  m_PrefabInstance: {fileID: 5340308035556257987}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &4139224379244012372
+--- !u!95 &2101121168
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2694602660931061932}
+  m_GameObject: {fileID: 5106514684709932434}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: e53f104de3cacb546999611ba73ac573, type: 2}
@@ -95,18 +103,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &9121199336442383105
+--- !u!114 &2101121167
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2694602660931061932}
+  m_GameObject: {fileID: 5106514684709932434}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a3277628e4ed544a90a92fe6504edec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationCharacter: {fileID: 4139224379244012372}
   m_animationType: 2
   m_sportType: 3

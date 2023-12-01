@@ -14,6 +14,8 @@ public class ScenarioEndWindow : MonoBehaviour
     private TextMeshProUGUI dotsText;
     [SerializeField]
     private TextMeshProUGUI scoresText;
+    [SerializeField]
+    private TextMeshProUGUI comboText;
 
 
     private ScenarioController scenarioController;  
@@ -22,8 +24,9 @@ public class ScenarioEndWindow : MonoBehaviour
     {
         scenarioController = FindObjectOfType<ScenarioController>();
         endGameButton.onClick.AddListener(EndGame);
-        dotsText.text = $"Вы устранили {scenarioController.RightDotsCount} из {scenarioController.DotsCount} точек боли правильно!";
-        scoresText.text = $"Вы набрали {scenarioController.Score} очков";
+        dotsText.text = $"{scenarioController.RightDotsCount}/{scenarioController.DotsCount}";
+        scoresText.text = $"{scenarioController.Score}";
+        comboText.text = $"{scenarioController.Combo}";
     }
     private void OnDestroy()
     {

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 50fe6caeed066b042a83f180cd64bf48
+guid: a22070606a578e744927dcd25bb0fc2f
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -58,7 +58,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.5249406
+      - time: 0.52227724
         functionName: EndAnimation
         data: 
         objectReferenceParameter: {instanceID: 0}

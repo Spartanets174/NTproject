@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class ScenarioInvokerView : MonoBehaviour
     private Button SelectManButton;
     [SerializeField]
     private Button SelectWomanButton;
+    [SerializeField]
+    private Button endGameButton;
 
     [Space, Header("Objects")]
     [SerializeField]
@@ -27,6 +30,8 @@ public class ScenarioInvokerView : MonoBehaviour
     private GenderMode genderMode;
     private ScenarioMode scenarioMode;
 
+
+    public event Action onEndGame;
     public void Start()
     {
         scenarioController =FindObjectOfType<ScenarioController>();
@@ -35,6 +40,7 @@ public class ScenarioInvokerView : MonoBehaviour
         StartTrainingButton.onClick.AddListener(StartTraining);
         SelectManButton.onClick.AddListener(SelectMan);
         SelectWomanButton.onClick.AddListener(SelectWoman);
+        endGameButton.onClick.AddListener(EndGameButtonClick);
 
         ScenarioModeButtons.SetActive(false);
     }
@@ -45,6 +51,12 @@ public class ScenarioInvokerView : MonoBehaviour
         StartTrainingButton.onClick.RemoveListener(StartTraining);
         SelectManButton.onClick.RemoveListener(SelectMan);
         SelectWomanButton.onClick.RemoveListener(SelectWoman);
+        endGameButton.onClick.RemoveListener(EndGameButtonClick);
+    }
+
+    private void EndGameButtonClick()
+    {
+        onEndGame?.Invoke();
     }
 
     private void SelectMan()

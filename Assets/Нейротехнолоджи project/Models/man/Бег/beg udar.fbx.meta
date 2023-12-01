@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 228b10eb7f1f6b4469cd30d112bb85d5
+guid: 050d92845c8515b4ab1d95aa35c4e591
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -19,8 +19,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: Event EndAnimation has a time (2.612827) outside the
-      clip's valid range (0.000000..1.166667). It will never be fired
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -58,7 +57,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.34916863
+      - time: 0.24009901
         functionName: EndAnimation
         data: 
         objectReferenceParameter: {instanceID: 0}

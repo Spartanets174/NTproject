@@ -20,11 +20,12 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
 
     [SerializeField]
     private ScenarioInvokerView scenarioInvokerView;
-
     [SerializeField]
     private ScenarioEndWindow scenarioEndWindow;
     [SerializeField]
     private HealingProcessWindow healingProcessWindow;
+    [SerializeField]
+    private ExitGameWindow exitGameWindow;
 
     public bool IsScenarioTrain { get; private set; }
 
@@ -51,6 +52,8 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
         scenarioController.OnHealingProcessStarted += SetupHealingProcessWindow;
 
         pauseWindow.onEndGame += EndGame;
+        scenarioInvokerView.onEndGame+= EndGame;
+        exitGameWindow.onExit += scenarioController.EndScenario;
     }
 
     private void SetupHealingProcessWindow()
@@ -63,7 +66,7 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
 
     private void EndGame()
     {
-        scenarioController.EndScenario();
+        exitGameWindow.gameObject.SetActive(true);        
     }
 
    

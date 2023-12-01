@@ -8,8 +8,6 @@ public class PauseMenuWindow : MonoBehaviour
 {
     [Header("Buttons")]
     [SerializeField]
-    private Button toGameButton;
-    [SerializeField]
     private Button toPasueMenuButton;
     [SerializeField]
     private Button continueButton;
@@ -21,6 +19,8 @@ public class PauseMenuWindow : MonoBehaviour
     [SerializeField]
     private GameObject instructionWindow;
     [SerializeField]
+    private GameObject pauseMenuWindow;
+    [SerializeField]
     private GameObject pauseWindow;
 
    public event Action onEndGame;
@@ -28,7 +28,6 @@ public class PauseMenuWindow : MonoBehaviour
     private void Start()
     {
         toPasueMenuButton.onClick.AddListener(DisableInstructionWindow);
-        toGameButton.onClick.AddListener(DisablePauseWindow);
         instructionButton.onClick.AddListener(EnableInstructionWindow);
         continueButton.onClick.AddListener(DisablePauseWindow);
         endGameButton.onClick.AddListener(EndGameButtonClick);
@@ -37,7 +36,6 @@ public class PauseMenuWindow : MonoBehaviour
     private void OnDestroy()
     {
         toPasueMenuButton.onClick.RemoveListener(DisableInstructionWindow);
-        toGameButton.onClick.RemoveListener(DisablePauseWindow);
         instructionButton.onClick.RemoveListener(EnableInstructionWindow);
         continueButton.onClick.RemoveListener(DisablePauseWindow);
         endGameButton.onClick.RemoveListener(EndGameButtonClick);
@@ -49,10 +47,12 @@ public class PauseMenuWindow : MonoBehaviour
     private void DisableInstructionWindow()
     {
         instructionWindow.SetActive(false);
+        pauseMenuWindow.SetActive(true);
     }
     private void EnableInstructionWindow()
     {
         instructionWindow.SetActive(true);
+        pauseMenuWindow.SetActive(false);
     }
     private void DisablePauseWindow()
     {
