@@ -20,6 +20,9 @@ public class ScenarioController : MonoActionController, IBootstrapper
 
     [SerializeField]
     private PlayerData playerData;
+    [SerializeField]
+    private HealingProcessWindow healingProcessWindow;
+    public HealingProcessWindow HealingProcessWindow => healingProcessWindow;
 
     [Header("Characters")]
     [SerializeField]
@@ -45,6 +48,9 @@ public class ScenarioController : MonoActionController, IBootstrapper
         }
     }
 
+    private ScenarioMACore currentCore;
+    public ScenarioMACore CurrentCore=> currentCore;
+
     public bool isRightExercise { get; set; } = false;
 
     private int currentStepIndex;
@@ -53,8 +59,15 @@ public class ScenarioController : MonoActionController, IBootstrapper
     private int m_scores;
     public int Score => m_scores;
 
+    private int maxCombo;
     private int m_combo;
-    public int Combo => m_combo;
+    public int Combo
+    {
+        get
+        {
+            return Mathf.Max(m_combo, maxCombo);
+        }
+    }
 
     private int m_rightDotsCount;
     public int RightDotsCount => m_rightDotsCount;
@@ -66,11 +79,12 @@ public class ScenarioController : MonoActionController, IBootstrapper
 
     public DbManager DbManager => dbManager;
 
+    
 
 
     public void Init()
     {
-        dbManager = FindObjectOfType<DbManager>();
+        dbManager = FindObjectOfType<DbManager>();       
     }
 
     private void OnDestroy()
@@ -93,9 +107,12 @@ public class ScenarioController : MonoActionController, IBootstrapper
         selectedScenarioMode = scenarioMode;
         selectedGenderMode = genderMode;
 
+        selectedMonoActionGroup.OnCorePreSetup += SetCurrentCore;
         selectedMonoActionGroup.OnCorePreSetup += StepPreStartedHandler;
+        
         selectedMonoActionGroup.OnCoreSetup += StepStartedHandler;
         selectedMonoActionGroup.OnCoreCompleted += StepCompletedHandler;
+        OnHealingProcessStarted += SetupHealingProcessWindow;
 
         StartSelectedGroup();
         OnScenarioStarted?.Invoke();
@@ -107,8 +124,10 @@ public class ScenarioController : MonoActionController, IBootstrapper
         if (_selectedMonoActionGroup != null)
         {
             selectedMonoActionGroup.OnCorePreSetup -= StepPreStartedHandler;
+            selectedMonoActionGroup.OnCorePreSetup -= SetCurrentCore;
             selectedMonoActionGroup.OnCoreSetup -= StepStartedHandler;
             selectedMonoActionGroup.OnCoreCompleted -= StepCompletedHandler;
+            OnHealingProcessStarted -= SetupHealingProcessWindow;
 
             currentStepIndex = 0;
 
@@ -118,8 +137,14 @@ public class ScenarioController : MonoActionController, IBootstrapper
         SceneManager.LoadScene("Menu");
         OnScenarioEnded?.Invoke();
     }
-
-
+    private void SetCurrentCore()
+    {
+        currentCore = (ScenarioMACore)selectedMonoActionGroup.CurrentCoreInAction;
+    }
+    private void SetupHealingProcessWindow()
+    {
+        healingProcessWindow.Setup((HealingMAComp)currentCore.components[currentCore.CurrentComponentIndex]);       
+    }
     protected override void OnGroupEndedHandler()
     {
 
@@ -129,6 +154,7 @@ public class ScenarioController : MonoActionController, IBootstrapper
             if (Score> playerData.playerScores)
             {
                 playerData.playerScores = Score;
+                playerData.playerCombo = Combo;
                 dbManager.UpdatePlayerScore();
             }        
         }
@@ -162,6 +188,10 @@ public class ScenarioController : MonoActionController, IBootstrapper
     }
     public void ResetCombo()
     {
+        if (m_combo > maxCombo)
+        {
+            maxCombo = m_combo;
+        }
         m_combo=0;
     }
     public void MinusRightDots()

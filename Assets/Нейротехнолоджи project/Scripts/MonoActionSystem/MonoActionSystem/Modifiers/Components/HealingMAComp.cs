@@ -17,7 +17,7 @@ public class HealingMAComp : MonoActionComponent
         {
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
-            OnSetup?.Invoke();
+            OnSetup?.Invoke(this);
             currentGenderMode = genderMode;
             currentsportType = sportType;
             scenarioController = FindObjectOfType<ScenarioController>();
@@ -60,7 +60,20 @@ public class HealingMAComp : MonoActionComponent
 public enum BodyParts
 {
     None,
-    a,
-    b,
-    c
+    LeftAnkleJoint,
+    RightAnkleJoint,
+    LeftKnee,
+    RightKnee,
+    LeftShoulder,
+    RightShoulder,
+    LeftElbow,
+    RightElbow,
+    LeftWrist,
+    RightWrist,
+    SmallBack
+}
+public enum Instrument
+{
+    Cordus,
+    Sacrus
 }

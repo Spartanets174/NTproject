@@ -10,6 +10,8 @@ public class HealingProcessWindow : MonoBehaviour
     private GameObject man;
     [SerializeField]
     private GameObject woman;
+    [SerializeField]
+    private InstrumentController instrumentController;
 
     private List<PainPoint> PainPoints;
     private HealingMAComp HealingMAComp;
@@ -42,7 +44,27 @@ public class HealingProcessWindow : MonoBehaviour
         foreach (var item in PainPoints)
         {
             item.OnClick += SetPointsState;
+            item.OnClick += SetLastClickedInstrument;
         }
+        foreach (var instrument in instrumentController.Instruments)
+        {
+            instrument.OnClick += AllowPointClick;
+        }
+    }
+
+    private void AllowPointClick(ClickableSpriteRenderer renderer)
+    {
+        foreach (var item in PainPoints)
+        {
+            item.IsAllowedToInteract = true;
+        }
+    }
+
+    private void SetLastClickedInstrument(ClickableSpriteRenderer clickableSprite)
+    {
+        PainPoint painPoint = (PainPoint)clickableSprite;
+        Instrument instrument = instrumentController.CurrentInstrumentHolder.Instrument == Instrument.Sacrus ? Instrument.Sacrus : Instrument.Cordus;
+        painPoint.LastClickedInstrument = instrument;
     }
 
     private void SetupForMan()
@@ -60,8 +82,7 @@ public class HealingProcessWindow : MonoBehaviour
 
     private void OnComplete()
     {
-        CheckPoints();
-        ResetPoints();
+        CheckPoints();    
         this.gameObject.SetActive(false);
     }
     private void CheckPoints()
@@ -95,16 +116,16 @@ public class HealingProcessWindow : MonoBehaviour
     {
         if (point != null)
         {
-            ScenarioController.AddScores();
-            ScenarioController.AddCombo();
-            ScenarioController.AddRightDots();
-            return true;
+            if (point.LastClickedInstrument == point.Instrument)
+            {
+                ScenarioController.AddScores();
+                ScenarioController.AddCombo();
+                ScenarioController.AddRightDots();
+                return true;
+            }                  
         }
-        else
-        {
-            ScenarioController.ResetCombo();
-            return false;
-        }
+        ScenarioController.ResetCombo();
+        return false;
     }
 
     public void ResetHealingProcess()
@@ -112,10 +133,16 @@ public class HealingProcessWindow : MonoBehaviour
         foreach (var item in PainPoints)
         {
             item.ResetPoint();
+            item.SetNormalState();
+        }
+        foreach (var item in instrumentController.Instruments)
+        {
+            item.ResetInstrumentHolder();
+            item.SetNormalState();
         }
     }
 
-    private void SetPointsState()
+    private void SetPointsState(ClickableSpriteRenderer clickableSprite)
     {        
         if (PainPoints.FindAll(x=>x.IsChosen).Count>=2)
         {
@@ -129,11 +156,4 @@ public class HealingProcessWindow : MonoBehaviour
         }
     }
 
-    private void ResetPoints()
-    {
-        foreach (var item in PainPoints)
-        {
-            item.SetNormalState();
-        }
-    }
 }

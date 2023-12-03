@@ -48,6 +48,7 @@ public class DataLoader : MonoBehaviour, IBootstrapper
         playerData.playerId = id;
         playerData.playerName = Nick;
         playerData.playerScores = 0;
+        playerData.playerCombo = 0;
 
         SaveSystem.SavePlayer(id);
 
@@ -71,6 +72,7 @@ public class DataLoader : MonoBehaviour, IBootstrapper
         
         playerData.playerName = userData.UserName;
         playerData.playerScores = userData.UserScore;
+        playerData.playerCombo = userData.UserCombo;
 
         SceneManager.LoadScene("menu");
     }

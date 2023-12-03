@@ -15,7 +15,7 @@ public class RightWrongAnimationMAComp : MonoActionComponent
         {
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
-            OnSetup?.Invoke();
+            OnSetup?.Invoke(this);
             currentGenderMode = genderMode;
             currentsportType = sportType;
             scenarioController = FindObjectOfType<ScenarioController>();

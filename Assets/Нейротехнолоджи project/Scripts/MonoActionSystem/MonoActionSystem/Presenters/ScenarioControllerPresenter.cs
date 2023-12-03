@@ -22,16 +22,17 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
     private ScenarioInvokerView scenarioInvokerView;
     [SerializeField]
     private ScenarioEndWindow scenarioEndWindow;
-    [SerializeField]
-    private HealingProcessWindow healingProcessWindow;
+   
     [SerializeField]
     private ExitGameWindow exitGameWindow;
+    [SerializeField]
+    private InstructionWindow instructionWindow;
 
     public bool IsScenarioTrain { get; private set; }
 
     private ScenarioMAGroup selectedScenarioGroup;
 
-    private ScenarioMACore currentCore;
+    
 
     private ScenarioController scenarioController;
 
@@ -48,21 +49,16 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
         scenarioController.OnGroupEnded += OnScenarioEnded;
 
         scenarioController.OnStepPreSetup += CoreOnPreStepSetup;
+        scenarioController.HealingProcessWindow.OnPointsChosen += EnableNextStepButton;
+        scenarioController.HealingProcessWindow.OnPointsUnChosen += DisableNextStepButton;
 
-        scenarioController.OnHealingProcessStarted += SetupHealingProcessWindow;
-
+        instructionWindow.OnWindowClosed += NextComponent;
         pauseWindow.onEndGame += EndGame;
         scenarioInvokerView.onEndGame+= EndGame;
         exitGameWindow.onExit += scenarioController.EndScenario;
     }
 
-    private void SetupHealingProcessWindow()
-    {
-        healingProcessWindow.Setup((HealingMAComp)currentCore.components[currentCore.CurrentComponentIndex]);
-
-        healingProcessWindow.OnPointsChosen += EnableNextStepButton;
-        healingProcessWindow.OnPointsUnChosen += DisableNextStepButton;
-    }
+  
 
     private void EndGame()
     {
@@ -107,10 +103,10 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
 
     private void CoreOnPreStepSetup()
     {
-        currentCore = (ScenarioMACore)scenarioController.selectedMonoActionGroup.CurrentCoreInAction;
-        foreach (var item in currentCore.components)
+        foreach (var item in scenarioController.CurrentCore.components)
         {
             item.OnSetup += DisableNextStepButton;
+            
             if (item is AnimationMAComp)
             {
                 AnimationMAComp comp = (AnimationMAComp)item;
@@ -121,13 +117,30 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
                 RightWrongAnimationMAComp comp = (RightWrongAnimationMAComp)item;
                 comp.OnAnimationEnded += EnableNextStepButton;
             }
+            if (item is TrainMAComp)
+            {
+                item.OnSetup += SetTrainData;
+                
+            }
         }
     }
 
+    private void SetTrainData(MonoActionComponent component)
+    {
+        TrainMAComp comp = (TrainMAComp)component;
+        instructionWindow.SetData(comp.TrainText);
+        instructionWindow.OpenWindow();
+    }
+
+    private void DisableNextStepButton(MonoActionComponent component)
+    {
+        nextStepButtonButton.interactable = false;
+    }
     private void DisableNextStepButton()
     {
         nextStepButtonButton.interactable = false;
     }
+
 
     private void EnableNextStepButton()
     {
@@ -136,6 +149,6 @@ public class ScenarioControllerPresenter : MonoBehaviour, IBootstrapper
 
     private void NextComponent()
     {
-        currentCore.components[currentCore.CurrentComponentIndex].CompleteComponent();
+        scenarioController.CurrentCore.components[scenarioController.CurrentCore.CurrentComponentIndex].CompleteComponent();
     }
 }

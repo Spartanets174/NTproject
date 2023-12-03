@@ -52,7 +52,7 @@ public class DbManager : MonoBehaviour
     #region Player
     public int InsertToPlayers(string Name)
     {
-        string query = $"insert into {ConnectionInfo.database}.users (username,userScore) values ('{Name}',{0})";
+        string query = $"insert into {ConnectionInfo.database}.users (username,userScore, userCombo) values ('{Name}',{0},{0})";
 
         var command = new MySqlCommand(query, con);
         try
@@ -69,7 +69,7 @@ public class DbManager : MonoBehaviour
 
     public int UpdatePlayerScore()
     {
-        string query = $"UPDATE {ConnectionInfo.database}.users SET userScore = {playerData.playerScores} where username='{playerData.playerName}'";
+        string query = $"UPDATE {ConnectionInfo.database}.users SET userScore = {playerData.playerScores}, userCombo = {playerData.playerCombo} where username='{playerData.playerName}'";
 
         var command = new MySqlCommand(query, con);
         try

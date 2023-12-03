@@ -10,4 +10,6 @@ public class PlayerData : ScriptableObject
 
     public int playerScores;
 
+    public int playerCombo;
+
 }

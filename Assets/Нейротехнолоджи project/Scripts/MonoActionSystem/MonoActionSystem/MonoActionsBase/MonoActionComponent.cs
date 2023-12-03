@@ -24,7 +24,7 @@ public class MonoActionComponent : MonoBehaviour
     [SerializeField] protected string m_componentName;
 
 
-    public Action OnSetup = null;
+    public Action<MonoActionComponent> OnSetup = null;
     public Action OnComplete = null;
 
     public UnityEvent OnSetupEvent;
@@ -62,7 +62,7 @@ public class MonoActionComponent : MonoBehaviour
         {        
             _isComponentActive = true;
             OnSetupEvent?.Invoke();
-            OnSetup?.Invoke();
+            OnSetup?.Invoke(this);
             currentGenderMode = genderMode;
             currentsportType = sportType;
             scenarioController = FindObjectOfType<ScenarioController>();
