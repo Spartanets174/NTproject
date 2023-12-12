@@ -42,23 +42,7 @@ public class UIControllerCreatePlayer : MonoBehaviour, IBootstrapper
         }
         else
         {
-            if (Nick.text.Length <= 15)
-            {
-                if (Nick.text.Length >= 4)
-                {
-                    dataLoader.IsNicknameInBase(Nick.text);
-                }
-                else
-                {
-                    warningText.text = "Имя слишком маленькое (минимум 4 символа)!";
-                    StartCoroutine(OnWarningText());
-                }
-            }
-            else
-            {
-                warningText.text = "Имя слишком большое (максимум 15 символов)!";
-                StartCoroutine(OnWarningText());
-            }
+            dataLoader.IsNicknameInBase(Nick.text);
         }
     }
     IEnumerator OnWarningText()
