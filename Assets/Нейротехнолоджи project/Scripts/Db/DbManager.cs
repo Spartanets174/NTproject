@@ -2,7 +2,6 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public static class ConnectionInfo
 {
@@ -12,16 +11,13 @@ public static class ConnectionInfo
     public static string database = "dbneiro";
 }
 
-public class DbManager : MonoBehaviour
+public class DbManager : DataController
 {
-    static string connectionString = $"server = {ConnectionInfo.ip}; uid = {ConnectionInfo.uid}; pwd = {ConnectionInfo.pwd}; Database = {ConnectionInfo.database}; SSLMode = none";
-
     public static MySqlConnection con;
-
-    [SerializeField] private PlayerData playerData;
-    public PlayerData PlayerData => playerData;
-    public void Awake()
+   
+    public override void Init()
     {
+        connectionString = $"server = {ConnectionInfo.ip}; uid = {ConnectionInfo.uid}; pwd = {ConnectionInfo.pwd}; Database = {ConnectionInfo.database}; SSLMode = none";
         con = new MySqlConnection(connectionString);
         try
         {
@@ -37,20 +33,18 @@ public class DbManager : MonoBehaviour
     {
         if (playerData!=null)
         {
-            UpdatePlayerScore();
-
-            closeCon();
-            Debug.Log("closed");
+            UpdatePlayerScore(closeCon);
         }
         
     }
     public void closeCon()
     {
         con.Close();
+        Debug.Log("closed");
     }
 
     #region Player
-    public int InsertToPlayers(string Name)
+    public override void InsertToPlayers(string Name, Action<int> callback)
     {
         string query = $"insert into {ConnectionInfo.database}.users (username,userScore, userCombo) values ('{Name}',{0},{0})";
 
@@ -64,10 +58,10 @@ public class DbManager : MonoBehaviour
             Debug.LogError(ex.Message);
         }
         command.Dispose();
-        return Convert.ToInt32(command.LastInsertedId);
+        callback?.Invoke((int)command.LastInsertedId);
     }
 
-    public int UpdatePlayerScore()
+    public override void UpdatePlayerScore(Action callback)
     {
         string query = $"UPDATE {ConnectionInfo.database}.users SET userScore = {playerData.playerScores}, userCombo = {playerData.playerCombo} where username='{playerData.playerName}'";
 
@@ -81,9 +75,9 @@ public class DbManager : MonoBehaviour
             Debug.LogError(ex.Message);
         }
         command.Dispose();
-        return Convert.ToInt32(command.LastInsertedId);
+        callback?.Invoke();
     }
-    public List<UserData> SelectUsers()
+    public override void SelectUsers(Action<List<UserData>> callback)
     {
         string query = $"select * from {ConnectionInfo.database}.users";
         List<UserData> users = new ();
@@ -115,11 +109,11 @@ public class DbManager : MonoBehaviour
             command.Dispose();
             Debug.LogError(ex.Message);
         }
-        return users;
+        callback?.Invoke(users);
     }
 
 
-    public UserData SelectUser(int id)
+    public override void SelectUser(int id,Action<UserData> callback)
     {
         string query = $"select * from {ConnectionInfo.database}.users where  idUser = {id}";       
         MySqlCommand command = new MySqlCommand(query, con);
@@ -134,7 +128,7 @@ public class DbManager : MonoBehaviour
                 int combo = reader.GetInt32("userCombo");
                 UserData user = new(id, name, scores, combo);
                 command.Dispose();
-                return user;
+                callback?.Invoke(user);
             }
             else
             {
@@ -147,10 +141,9 @@ public class DbManager : MonoBehaviour
             Debug.LogError(ex.Message);
             
         }
-        return null;
     }
 
-    public UserData SelectUserByNick(string Name)
+    public override void SelectUserByNick(string Name, Action<UserData> callback)
     {
         string query = $"select * from {ConnectionInfo.database}.users where  username = '{Name}'";
         MySqlCommand command = new MySqlCommand(query, con);
@@ -165,7 +158,7 @@ public class DbManager : MonoBehaviour
                 int combo = reader.GetInt32("userCombo");
                 UserData user = new(id, name, scores, combo);
                 command.Dispose();
-                return user;
+                callback?.Invoke(user);
             }
             else
             {
@@ -178,7 +171,6 @@ public class DbManager : MonoBehaviour
             Debug.LogError(ex.Message);
 
         }
-        return null;
     }
 
     #endregion

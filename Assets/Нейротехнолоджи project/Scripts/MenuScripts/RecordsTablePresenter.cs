@@ -28,7 +28,7 @@ public class RecordsTablePresenter : MonoBehaviour, IBootstrapper
         closeButton.onClick.AddListener(TurnOffTable);
 
         recordsTableController =FindObjectOfType<RecordsTableController>();
-        playerData = recordsTableController.DbManager.PlayerData;
+        playerData = recordsTableController.DataController.PlayerData;
     }
     private void OnEnable()
     {

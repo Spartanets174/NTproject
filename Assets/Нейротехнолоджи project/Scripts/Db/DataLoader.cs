@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,12 +10,28 @@ public class DataLoader : MonoBehaviour, IBootstrapper
     [SerializeField]
     private DbManager DB;
     [SerializeField]
+    private WebController webController;
+    [SerializeField]
     private PlayerData playerData;
+
+    [SerializeField]
+    private DataMode dataMode;
+
+    private DataController currentDataController;
     public void Init()
     {
-        playerData = DB.PlayerData;
         playerData.playerId = SaveSystem.LoadPlayer();
-        playerData = DB.PlayerData;
+        switch (dataMode)
+        {
+            case DataMode.Web:
+                currentDataController = webController;
+                break;
+            case DataMode.Standalone:
+                currentDataController = DB;
+                break;
+        }
+        currentDataController.Init();
+        currentDataController.AddComponent<DontDestroyOnLoad>();
         if (playerData.playerId != -1)
         {
             GetPlayerData();
@@ -23,7 +40,11 @@ public class DataLoader : MonoBehaviour, IBootstrapper
     public void IsNicknameInBase(string Nick)
     {
         bool hasName = false;
-        List<UserData> nickList = DB.SelectUsers();
+        List<UserData> nickList = new();
+        currentDataController.SelectUsers((List<UserData> userDatas) =>
+        {
+            nickList = userDatas;
+        });
         for (int i = 0; i < nickList.Count; i++)
         {
             if (nickList[i].UserName == Nick)
@@ -44,28 +65,36 @@ public class DataLoader : MonoBehaviour, IBootstrapper
 
     private void CreateNewPlayer(string Nick)
     {
-        int id = DB.InsertToPlayers(Nick);        
-        playerData.playerId = id;
-        playerData.playerName = Nick;
-        playerData.playerScores = 0;
-        playerData.playerCombo = 0;
+        currentDataController.InsertToPlayers(Nick, (int id) =>
+        {
+            playerData.playerId = id;
+            playerData.playerName = Nick;
+            playerData.playerScores = 0;
+            playerData.playerCombo = 0;
 
-        SaveSystem.SavePlayer(id);
+            SaveSystem.SavePlayer(id);
 
-        SceneManager.LoadScene("menu");
+            SceneManager.LoadScene("menu");
+        });
     }
 
     private void GetPlayerData()
     {
         playerData.playerId = SaveSystem.LoadPlayer();
-        UserData userData;
+        UserData userData=null;
         if (playerData.playerId!=-1)
         {
-            userData = DB.SelectUser(playerData.playerId);
+            currentDataController.SelectUser(playerData.playerId, (UserData gettedUserData) =>
+            {
+                userData = gettedUserData;
+            });
         }
         else
         {
-            userData = DB.SelectUserByNick(playerData.playerName);
+            currentDataController.SelectUserByNick(playerData.playerName, (UserData gettedUserData) =>
+            {
+                userData = gettedUserData;
+            });
             playerData.playerId = userData.UserId;
             SaveSystem.SavePlayer(playerData.playerId);
         }
@@ -76,4 +105,10 @@ public class DataLoader : MonoBehaviour, IBootstrapper
 
         SceneManager.LoadScene("menu");
     }
+}
+
+public enum DataMode
+{
+    Web,
+    Standalone
 }

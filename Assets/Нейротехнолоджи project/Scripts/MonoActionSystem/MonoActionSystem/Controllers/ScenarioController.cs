@@ -75,16 +75,16 @@ public class ScenarioController : MonoActionController, IBootstrapper
     private int m_dotsCount;
     public int DotsCount => m_dotsCount;
 
-    private DbManager dbManager;
+    private DataController dataController;
 
-    public DbManager DbManager => dbManager;
+    public DataController DataController => dataController;
 
     
 
 
     public void Init()
     {
-        dbManager = FindObjectOfType<DbManager>();       
+        dataController = FindObjectOfType<DataController>();       
     }
 
     private void OnDestroy()
@@ -155,7 +155,7 @@ public class ScenarioController : MonoActionController, IBootstrapper
             {
                 playerData.playerScores = Score;
                 playerData.playerCombo = Combo;
-                dbManager.UpdatePlayerScore();
+                dataController.UpdatePlayerScore(null);
             }        
         }
     }
