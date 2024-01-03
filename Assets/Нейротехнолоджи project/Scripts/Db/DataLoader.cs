@@ -19,9 +19,9 @@ public class DataLoader : MonoBehaviour, IBootstrapper
     private DataMode dataMode;
 
     private DataController currentDataController;
+    private string currentNick;
     public void Init()
-    {
-        playerData.playerId = SaveSystem.LoadPlayer();
+    {       
         switch (dataMode)
         {
             case DataMode.Web:
@@ -31,39 +31,43 @@ public class DataLoader : MonoBehaviour, IBootstrapper
                 currentDataController = DB;
                 break;
         }
+        playerData.ClearData();
         currentDataController.Init();
         currentDataController.AddComponent<DontDestroyOnLoad>();
-        if (playerData.playerId != -1)
-        {
-            GetPlayerData();
-        }
+
+        /*        playerData.playerId = SaveSystem.LoadPlayer();
+                if (playerData.playerId != -1)
+                {
+                    GetPlayerData();
+                }
+        */
     }
     public void IsNicknameInBase(string Nick)
     {
+        currentNick = Nick;
+        currentDataController.SelectUsers(CheckNickname);     
+    }
+
+    private void CheckNickname(List<UserData> userDatas)
+    {
         bool hasName = false;
-        List<UserData> nickList = new();
-        currentDataController.SelectUsers((List<UserData> userDatas) =>
+        for (int i = 0; i < userDatas.Count; i++)
         {
-            nickList = userDatas;
-        });
-        for (int i = 0; i < nickList.Count; i++)
-        {
-            if (nickList[i].UserName == Nick)
+            if (userDatas[i].UserName == currentNick)
             {
-                playerData.playerName = Nick;
+                playerData.playerName = currentNick;
                 hasName = true;
             }
         }
-        if (nickList.Count == 0 || !hasName)
+        if (userDatas.Count == 0 || !hasName)
         {
-            CreateNewPlayer(Nick);
+            CreateNewPlayer(currentNick);
         }
         else
         {
             GetPlayerData();
         }
     }
-
     private void CreateNewPlayer(string Nick)
     {
         currentDataController.InsertToPlayers(Nick, (int id) =>
@@ -73,16 +77,16 @@ public class DataLoader : MonoBehaviour, IBootstrapper
             playerData.playerScores = 0;
             playerData.playerCombo = 0;
 
-            SaveSystem.SavePlayer(id);
-
+/*            SaveSystem.SavePlayer(id);
+*/
             SceneManager.LoadScene("menu");
         });
     }
 
     private void GetPlayerData()
     {
-        playerData.playerId = SaveSystem.LoadPlayer();
-        if (playerData.playerId!=-1)
+/*        playerData.playerId = SaveSystem.LoadPlayer();
+*/        if (playerData.playerId>0)
         {
             currentDataController.SelectUser(playerData.playerId, SetPlayerData);
         }
@@ -98,8 +102,8 @@ public class DataLoader : MonoBehaviour, IBootstrapper
         playerData.playerName = userData.UserName;
         playerData.playerScores = userData.UserScore;
         playerData.playerCombo = userData.UserCombo;
-        SaveSystem.SavePlayer(playerData.playerId);
-        SceneManager.LoadScene("menu");
+/*        SaveSystem.SavePlayer(playerData.playerId);
+*/        SceneManager.LoadScene("menu");
     }
 }
 

@@ -12,4 +12,11 @@ public class PlayerData : ScriptableObject
 
     public int playerCombo;
 
+    public void ClearData()
+    {
+        playerId = 0;
+        playerName = "";
+        playerScores = 0;
+        playerCombo = 0;
+    }
 }

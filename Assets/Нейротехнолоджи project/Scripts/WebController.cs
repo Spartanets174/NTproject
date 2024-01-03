@@ -96,9 +96,9 @@ public class WebController : DataController
                         for (int i = 0; i < jsonArray.Count; i++)
                         {
                             JSONObject jsonObject = jsonArray[i].AsObject;
-                            userDatas.Add(new UserData(jsonObject["idUser"], jsonObject["username"], jsonObject["userScore"], jsonObject["userCombo"])) ;
-                            callback?.Invoke(userDatas);
-                        }                                           
+                            userDatas.Add(new UserData(jsonObject["idUser"], jsonObject["username"], jsonObject["userScore"], jsonObject["userCombo"])) ;                            
+                        }
+                        callback?.Invoke(userDatas);
                     }
                     break;
             }
@@ -120,6 +120,7 @@ public class WebController : DataController
             }
             else
             {
+                Debug.Log(webRequest.downloadHandler.text);
                 JSONArray jsonArray = JSON.Parse(webRequest.downloadHandler.text) as JSONArray;
                 JSONObject jsonObject = jsonArray[0].AsObject;
                 UserData userData = new UserData(jsonObject["idUser"], jsonObject["username"], jsonObject["userScore"], jsonObject["userCombo"]);
