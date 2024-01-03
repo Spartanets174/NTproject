@@ -1,3 +1,4 @@
+using Renci.SshNet.Common;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -81,28 +82,23 @@ public class DataLoader : MonoBehaviour, IBootstrapper
     private void GetPlayerData()
     {
         playerData.playerId = SaveSystem.LoadPlayer();
-        UserData userData=null;
         if (playerData.playerId!=-1)
         {
-            currentDataController.SelectUser(playerData.playerId, (UserData gettedUserData) =>
-            {
-                userData = gettedUserData;
-            });
+            currentDataController.SelectUser(playerData.playerId, SetPlayerData);
         }
         else
         {
-            currentDataController.SelectUserByNick(playerData.playerName, (UserData gettedUserData) =>
-            {
-                userData = gettedUserData;
-            });
-            playerData.playerId = userData.UserId;
-            SaveSystem.SavePlayer(playerData.playerId);
-        }
-        
+            currentDataController.SelectUserByNick(playerData.playerName, SetPlayerData);                  
+        }                      
+    }
+
+    private void SetPlayerData(UserData userData)
+    {
+        playerData.playerId = userData.UserId;
         playerData.playerName = userData.UserName;
         playerData.playerScores = userData.UserScore;
         playerData.playerCombo = userData.UserCombo;
-
+        SaveSystem.SavePlayer(playerData.playerId);
         SceneManager.LoadScene("menu");
     }
 }

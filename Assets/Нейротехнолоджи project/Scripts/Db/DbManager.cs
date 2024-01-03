@@ -180,19 +180,16 @@ public class DbManager : DataController
 
 
 public class UserData
-{
-    [SerializeField]
+{  
     private int m_userId;
     public int UserId => m_userId;
-    [SerializeField]
+
     private string m_userName;
     public string UserName => m_userName;
 
-    [SerializeField]
     private int m_userScore;
     public int UserScore => m_userScore;
 
-    [SerializeField]
     private int m_userCombo;
     public int UserCombo => m_userCombo;
 
